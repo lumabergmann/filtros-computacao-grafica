@@ -1,7 +1,88 @@
 from PIL import Image
-import matplotlib.pyplot as plt
 import numpy as np
 import math
+
+def processar_filtro(img_pil: Image.Image, filtro: str) -> Image.Image:
+    largura, altura = img_pil.size
+    pixels = img_pil.load()
+
+    # Transforma a imagem para tons de cinza
+    img_cinza = transformar_cinza(largura, altura, pixels)
+    pixels_cinza = img_cinza.load()
+    matriz_pixels = [[pixels_cinza[x, y] for x in range(largura)] for y in range (altura)]
+
+    # Cálculo do histograma
+    h = histograma(largura, altura, pixels_cinza)
+
+    # Transforma a imagem em preto e branco (binarizada)
+    img_binarizada = limiarizar(largura, altura, h, pixels_cinza) 
+    pixels_binarizada = img_binarizada.load()
+    matriz_binarizada = [[pixels_binarizada[x, y] for x in range (largura)] for y in range (altura)]
+
+    # ========== ESCOLHA DO FILTRO ==========
+    
+    if filtro == "cinza":
+        return img_cinza
+
+    elif filtro == "equalizar":
+        return equalizar(largura, altura, pixels_cinza, h)
+
+    elif filtro == "binarizar":
+        return img_binarizada
+
+    elif filtro == "blur":
+        kernel_media = [[1/81]*9 for _ in range(9)]
+        return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_media, altura, largura))
+
+    elif filtro == "bordas":
+        kernel_bordas = [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]]
+        return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_bordas, altura, largura))
+
+    elif filtro == "emboss":
+        kernel_emboss = [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]]
+        return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_emboss, altura, largura))
+
+    elif filtro == "motionBlur":
+        kernel_motion_blur = create_kernel_motion_blur(9)
+        return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_motion_blur, altura, largura))
+
+    elif filtro == "sobel":
+        sobel_x = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
+        sobel_y = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
+
+        gx_sobel = aplicar_kernel_bruto(matriz_pixels, sobel_x, altura, largura)
+        gy_sobel = aplicar_kernel_bruto(matriz_pixels, sobel_y, altura, largura)
+
+        return matriz_para_array(combina_magnitude(gx_sobel, gy_sobel, altura, largura))
+
+    elif filtro == "prewitt":
+        prewitt_x = [[-1,0,1],[-1,0,1],[-1,0,1]]
+        prewitt_y = [[-1,-1,-1],[0,0,0],[1,1,1]]
+
+        gx_prewitt = aplicar_kernel_bruto(matriz_pixels, prewitt_x, altura, largura)
+        gy_prewitt = aplicar_kernel_bruto(matriz_pixels, prewitt_y, altura, largura)
+
+        return matriz_para_array(combina_magnitude(gx_prewitt, gy_prewitt, altura, largura))
+
+    elif filtro == "mediana":
+        return matriz_para_array(filtro_mediana(matriz_pixels, 3, altura, largura))
+
+    elif filtro == "dilatacao":
+        return matriz_para_array(filtro_dilatacao(matriz_binarizada, 3, altura, largura))
+
+    elif filtro == "erosao":
+        return matriz_para_array(filtro_erosao(matriz_binarizada, 3, altura, largura))
+
+    elif filtro == "abertura":
+        return matriz_para_array(filtro_abertura(matriz_binarizada, 3, altura, largura))
+
+    elif filtro == "fechamento":
+        return matriz_para_array(filtro_fechamento(matriz_binarizada, 3, altura, largura))
+
+    else:
+        raise ValueError ("Filtro não reconhecido")
+
+
 
 def matriz_para_array(saida_original):
     # Converte a matriz para um array do numpy do tipo uint8
@@ -10,7 +91,7 @@ def matriz_para_array(saida_original):
 
     return imagem_saida
 
-# Para transformar a imagem em tons de cinza
+
 def transformar_cinza(largura, altura, pixels):
     imagem_cinza = Image.new("RGB", (largura, altura))   
     pixels_cinza = imagem_cinza.load()
@@ -23,7 +104,7 @@ def transformar_cinza(largura, altura, pixels):
             pixels_cinza[x,y] = (novo_rgb, novo_rgb, novo_rgb)
 
     imagem_cinza.save("./saida_cinza.webp")
-    return pixels_cinza
+    return imagem_cinza
 
 
 def histograma(largura, altura, pixels_cinza):
@@ -33,30 +114,8 @@ def histograma(largura, altura, pixels_cinza):
             i = pixels_cinza[x,y][0]
             h[i] += 1
 
-    plt.figure()
-    plt.bar(range(256), h, color="gray")
-    plt.title("Histograma de Frequências de Tons de Cinza")
-    plt.xlabel("Intensidade da cor (0-255)")
-    plt.ylabel("Frequência (quantidade de pixels)")
-    plt.savefig("histograma.png")
-
     return h
-
-def histograma_equalizado(largura, altura, pixels_equalizado):
-    h_equalizado = [0]*256  # Vetor de 256 posições com 0
-    for x in range (largura):
-        for y in range (altura):
-            i = pixels_equalizado[x,y][0]
-            h_equalizado[i] += 1
-
-    plt.figure()
-    plt.bar(range(256), h_equalizado, color="gray")
-    plt.title("Histograma da Imagem Equalizada")
-    plt.xlabel("Intensidade da cor (0-255)")
-    plt.ylabel("Frequência (quantidade de pixels)")
-    plt.savefig("histograma_equalizado.png")
-
-    return h_equalizado    
+   
 
 def equalizar(largura, altura, pixels_cinza, h):
     N = largura * altura
@@ -82,7 +141,7 @@ def equalizar(largura, altura, pixels_cinza, h):
             pixels_saida[x, y] = (novo_tom, novo_tom, novo_tom)
 
     imagem_equalizada.save("./saida_equalizada.webp")
-    return histograma_equalizado(largura, altura, pixels_saida)
+    return imagem_equalizada
 
 
 # Função para encontrar o melhor T para a função de limiarização
@@ -116,7 +175,7 @@ def encontrar_melhor_t(largura, altura, h):
 
     return melhor_t
 
-def limiarizar(largura, altura, h):
+def limiarizar(largura, altura, h, pixels_cinza):
     T = encontrar_melhor_t(largura, altura, h)
     imagem_binarizada = Image.new("RGB", (largura, altura))
     pixels_saida = imagem_binarizada.load()
@@ -129,7 +188,7 @@ def limiarizar(largura, altura, h):
                 pixels_saida[x, y] = (255, 255, 255)
 
     imagem_binarizada.save("./saida_binarizada.webp")
-    return pixels_saida
+    return imagem_binarizada
 
 
 def aplicar_kernel(imagem, kernel, altura, largura):
@@ -264,81 +323,3 @@ def filtro_abertura(imagem, n, altura, largura):
 
 def filtro_fechamento(imagem, n, altura, largura):
     return filtro_erosao(filtro_dilatacao(imagem, n, altura, largura), n, altura, largura)
-
-
-
-if __name__ == '__main__':
-    
-    img = Image.open("./entrada.webp")
-    largura, altura = img.size
-    pixels = img.load()
-
-    # Transformando a imagem para tons de cinza
-    pixels_cinza = transformar_cinza(largura, altura, pixels)
-
-    # Criando uma matriz com os pixels da imagem
-    imagem_cinza = [[pixels_cinza[x, y] for x in range(largura)] for y in range (altura)]
-
-    # FILTROS COM HISTOGRAMA (equalização e limiarização)
-    h = histograma(largura, altura, pixels_cinza)
-
-    h_equalizado = equalizar(largura, altura, pixels_cinza, h)
-
-    pixels_binarizada = limiarizar(largura, altura, h)
-    imagem_binarizada = [[pixels_binarizada[x, y] for x in range (largura)] for y in range (altura)]
-
-    # FILTROS COM CONVOLUÇÃO
-    kernel_media = [[1/81]*9 for _ in range(9)]   # Aplica blur
-    imagem_media = matriz_para_array(aplicar_kernel(imagem_cinza, kernel_media, altura, largura))
-    imagem_media.save("./saida_media.webp")
-
-    kernel_bordas = [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]]   # Detecção de bordas
-    imagem_bordas = matriz_para_array(aplicar_kernel(imagem_cinza, kernel_bordas, altura, largura))
-    imagem_bordas.save("./saida_bordas.webp")
-
-    kernel_emboss = [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]]   # Emboss
-    imagem_emboss = matriz_para_array(aplicar_kernel(imagem_cinza, kernel_emboss, altura, largura))
-    imagem_emboss.save("./saida_emboss.webp")
-
-    kernel_motion_blur = create_kernel_motion_blur(9)
-    imagem_motion_blur = matriz_para_array(aplicar_kernel(imagem_cinza, kernel_motion_blur, altura, largura))
-    imagem_motion_blur.save("./saida_motion_blur.webp")
-
-    # FILTROS COM KERNEL COM DUAS MATRIZES (SOBEL E PREWITT)
-    # Aplicando filtro de Sobel
-    sobel_x = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
-    sobel_y = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
-
-    gx_sobel = aplicar_kernel_bruto(imagem_cinza, sobel_x, altura, largura)
-    gy_sobel = aplicar_kernel_bruto(imagem_cinza, sobel_y, altura, largura)
-
-    imagem_sobel = matriz_para_array(combina_magnitude(gx_sobel, gy_sobel, altura, largura))
-    imagem_sobel.save("./saida_sobel.webp")
-
-    # Aplicando filtro de Prewitt
-    prewitt_x = [[-1,0,1],[-1,0,1],[-1,0,1]]
-    prewitt_y = [[-1,-1,-1],[0,0,0],[1,1,1]]
-
-    gx_prewitt = aplicar_kernel_bruto(imagem_cinza, prewitt_x, altura, largura)
-    gy_prewitt = aplicar_kernel_bruto(imagem_cinza, prewitt_y, altura, largura)
-
-    imagem_prewitt = matriz_para_array(combina_magnitude(gx_prewitt, gy_prewitt, altura, largura))
-    imagem_prewitt.save("./saida_prewitt.webp")
-
-    # FILTRO DA MEDIANA
-    imagem_mediana = matriz_para_array(filtro_mediana(imagem_cinza, 3, altura, largura))
-    imagem_mediana.save("./saida_mediana.webp")
-
-    # FILTROS DE DILATAÇÃO E EROSÃO
-    imagem_dilatacao = matriz_para_array(filtro_dilatacao(imagem_binarizada, 3, altura, largura))
-    imagem_dilatacao.save("./saida_dilatacao.webp")
-
-    imagem_erosao = matriz_para_array(filtro_erosao(imagem_binarizada, 3, altura, largura))
-    imagem_erosao.save("./saida_erosao.webp")
-
-    # FILTROS DE ABERTURA E FECHAMENTO
-    imagem_abertura = matriz_para_array(filtro_abertura(imagem_binarizada, 3, altura, largura))
-    imagem_abertura.save("./saida_abertura.webp")
-
-    imagem_fechamento = matriz_para_array(filtro_fechamento(imagem_binarizada, 3, altura, largura))
-    imagem_fechamento.save("./saida_fechamento.webp")
