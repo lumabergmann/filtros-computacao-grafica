@@ -20,12 +20,15 @@ async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...)
         imagem_original = Image.open(io.BytesIO(conteudo_bytes))  # Salva os arquivos na memória RAM (temporária)
 
         imagem_processada = processar_filtro(imagem_original, filtro)
+        formato_original = imagem_original.format or "PNG"  # Pega o formato original da imagem
 
         # Salvando na memória RAM
         buffer_saida = io.BytesIO()
-        imagem_processada.save(buffer_saida, format="PNG")  # Aqui deve ocorrer a escolha do formato. TODO: tornar a extensão da saída igual ao da entrada
+        imagem_processada.save(buffer_saida, format=formato_original)
 
-        return Response(content=buffer_saida.getvalue(), media_type="image/png")  # Retorna tudo que está armazenado no buffer
+        media_type = f"image/{formato_original.lower()}"
+
+        return Response(content=buffer_saida.getvalue(), media_type=media_type)  # Retorna tudo que está armazenado no buffer
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao processar imagem: {str(e)}")
