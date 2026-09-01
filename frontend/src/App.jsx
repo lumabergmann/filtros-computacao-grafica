@@ -22,11 +22,37 @@ function App() {
     e.preventDefault;  // Evita que a página seja recarregada ao enviar o formulário
 
     if(!imagem){
-      alert("Carregue uma imagem.")
+      alert("Carregue uma imagem.");
       return;
     }
 
     setCarregando(true);
+
+    const formData = new FormData();  // Classe usada para simular o envio de formulários HTML fo formato multipart/form-data. É a única forma correta de enviar arquivos com texto via requisições HTTP
+    formData.append("file", imagem);
+    formData.append("filtro", filtro);
+
+    try{
+      const response = await fetch("http://127.0.0.1:8000/processar", {
+        method: "POST",
+        body: formData,
+      });
+
+      if(!response.ok){
+        throw new Error("Erro ao processar imagem.");
+      }
+
+      const blob = await response.blob();   // BLOB: Binary Large Object
+      setImagemSaida(URL.createObjectURL(blob));
+    }
+    
+    catch(error){
+      alert(error.message);
+    }
+
+    finally{
+      setCarregando(false);
+    }
   };
 
 
