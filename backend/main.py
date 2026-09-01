@@ -16,7 +16,8 @@ async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...)
         raise HTTPException(status_code = 400, detail = f"Extensão de arquivo {extensao} não é permitida. Tipos aceitos: {', '.join(extensoes_permitidas)}.")
 
     try:
-        imagem_original = Image.open(io.BytesIO(file))  # Salva os arquivos na memória RAM (temporária)
+        conteudo_bytes = await file.read()
+        imagem_original = Image.open(io.BytesIO(conteudo_bytes))  # Salva os arquivos na memória RAM (temporária)
 
         imagem_processada = processar_filtro(imagem_original, filtro)
 
