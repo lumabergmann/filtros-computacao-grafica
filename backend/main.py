@@ -1,11 +1,20 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import Response
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from PIL import Image
 import io
 from filtros import processar_filtro
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=["*"], # Colocar o endereço exato do frontend
+    allow_methods=["POST"],
+    allow_headers=["*"]
+)
 
 @app.post("/processar")
 async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...)):  # O envio da imagem e do nome do filtro é obrigatório (os parâmetros recebidos não podem ser nulos)
