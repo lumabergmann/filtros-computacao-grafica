@@ -103,7 +103,6 @@ def transformar_cinza(largura, altura, pixels):
             novo_rgb = (r + g + b)//3
             pixels_cinza[x,y] = (novo_rgb, novo_rgb, novo_rgb)
 
-    imagem_cinza.save("./saida_cinza.webp")
     return imagem_cinza
 
 
@@ -140,7 +139,6 @@ def equalizar(largura, altura, pixels_cinza, h):
             novo_tom = nova_tabela[pixels_cinza[x,y][0]]
             pixels_saida[x, y] = (novo_tom, novo_tom, novo_tom)
 
-    imagem_equalizada.save("./saida_equalizada.webp")
     return imagem_equalizada
 
 
@@ -187,7 +185,6 @@ def limiarizar(largura, altura, h, pixels_cinza):
             else:
                 pixels_saida[x, y] = (255, 255, 255)
 
-    imagem_binarizada.save("./saida_binarizada.webp")
     return imagem_binarizada
 
 
