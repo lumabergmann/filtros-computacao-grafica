@@ -16,9 +16,20 @@ function App() {
       setPreviewEntrada(URL.createObjectURL(file));  // Cria uma URL para renderizar e exibir a imagem selecionada sem precisar fazer uploads prévios
       setImagemSaida(null);  // Elimina imagens de saída anteriores
     }
-  }
+  };
 
-  
+  const handleSubmit = async (e) => {   // Método que chama a API após o envio do formulário
+    e.preventDefault;  // Evita que a página seja recarregada ao enviar o formulário
+
+    if(!imagem){
+      alert("Carregue uma imagem.")
+      return;
+    }
+
+    setCarregando(true);
+  };
+
+
 
   return ();
 }
