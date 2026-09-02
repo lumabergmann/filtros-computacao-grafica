@@ -57,39 +57,42 @@ function App() {
 
 
   return (
-    <div>
+    <div className='root'>
       <h1>Filtros de Imagem</h1>
-      <form onSubmit={handleSubmit}>
+      <form className='btn-submit' onSubmit={handleSubmit}>
 
-        <div>
-          <label>Selecione a imagem</label>
-          <input onChange={handleImagemChange} type='file' accept='image/*' />
+      <div className='form-row'>
+          <div className='imageChoice'>
+            <label>Selecione a imagem</label>
+            <input onChange={handleImagemChange} type='file' accept='image/*' />
+          </div>
+
+          <div className='filterChoice'>
+            <label>Escolha o filtro</label>
+            <select value={filtro} onChange={(e) => setFiltro(e.target.value)}>
+              <option value="cinza">Cinza</option>
+              <option value="equalizar">Contraste</option>
+              <option value="binarizar">Preto e Branco</option>
+              <option value="blur">Blur</option>
+              <option value="bordas">Enfatizar bordas</option>
+              <option value="emboss">Emboss</option>
+              <option value="motionBlur">Motion Blur</option>
+              <option value="sobel">Sobel</option>
+              <option value="prewitt">Prewitt</option>
+              <option value="mediana">Mediana</option>
+              <option value="dilatacao">Dilatação</option>
+              <option value="erosao">Erosão</option>
+              <option value="abertura">Abertura</option>
+              <option value="fechamento">Fechamento</option>
+            </select>
+          </div>
         </div>
-
-        <div>
-          <label>Escolha o filtro</label>
-          <select value={filtro} onChange={(e) => setFiltro(e.target.value)}>
-            <option value="cinza">Cinza</option>
-            <option value="equalizar">Contraste</option>
-            <option value="binarizar">Preto e Branco</option>
-            <option value="blur">Blur</option>
-            <option value="bordas">Enfatizar bordas</option>
-            <option value="emboss">Emboss</option>
-            <option value="motionBlur">Motion Blur</option>
-            <option value="sobel">Sobel</option>
-            <option value="prewitt">Prewitt</option>
-            <option value="mediana">Mediana</option>
-            <option value="dilatacao">Dilatação</option>
-            <option value="erosao">Erosão</option>
-            <option value="abertura">Abertura</option>
-            <option value="fechamento">Fechamento</option>
-          </select>
+        <div className='form-actions'>
+          <button className='btn-primary' type='submit' disabled={carregando}>{carregando ? 'Processando...' : 'Aplicar Filtro'}</button>
         </div>
-
-          <button type='submit' disabled={carregando}>{carregando ? 'Processando...' : 'Aplicar Filtro'}</button>
       </form>
 
-      <div>
+      <div className='images'>
         {previewEntrada && (
           <div>
             <h2>Imagem de Entrada</h2>
