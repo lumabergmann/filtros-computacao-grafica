@@ -4,7 +4,7 @@ import './App.css'
 function App() {
   const [imagem, setImagem] = useState(null);
   const [previewEntrada, setPreviewEntrada] = useState(null);
-  const [filtro, setFiltro] = useState(null);
+  const [filtro, setFiltro] = useState("cinza");
   const [imagemSaida, setImagemSaida] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
@@ -19,7 +19,7 @@ function App() {
   };
 
   const handleSubmit = async (e) => {   // Método que chama a API após o envio do formulário
-    e.preventDefault;  // Evita que a página seja recarregada ao enviar o formulário
+    e.preventDefault();  // Evita que a página seja recarregada ao enviar o formulário
 
     if(!imagem){
       alert("Carregue uma imagem.");
@@ -56,8 +56,55 @@ function App() {
   };
 
 
+  return (
+    <div>
+      <h1>Filtros de Imagem</h1>
+      <form onSubmit={handleSubmit}>
 
-  return ();
+        <div>
+          <label>Selecione a imagem</label>
+          <input onChange={handleImagemChange} type='file' accept='image/*' />
+        </div>
+
+        <div>
+          <label>Escolha o filtro</label>
+          <select value={filtro} onChange={(e) => setFiltro(e.target.value)}>
+            <option value="cinza">Cinza</option>
+            <option value="equalizar">Contraste</option>
+            <option value="binarizar">Preto e Branco</option>
+            <option value="blur">Blur</option>
+            <option value="bordas">Enfatizar bordas</option>
+            <option value="emboss">Emboss</option>
+            <option value="motionBlur">Motion Blur</option>
+            <option value="sobel">Sobel</option>
+            <option value="prewitt">Prewitt</option>
+            <option value="mediana">Mediana</option>
+            <option value="dilatacao">Dilatação</option>
+            <option value="erosao">Erosão</option>
+            <option value="abertura">Abertura</option>
+            <option value="fechamento">Fechamento</option>
+          </select>
+        </div>
+
+          <button type='submit' disabled={carregando}>{carregando ? 'Processando...' : 'Aplicar Filtro'}</button>
+      </form>
+
+      <div>
+        {previewEntrada && (
+          <div>
+            <h2>Imagem de Entrada</h2>
+            <img src={previewEntrada} alt='Imagem de entrada'/>
+          </div>
+        )}
+        {imagemSaida &&(
+          <div>
+            <h2>Resultado</h2>
+            <img src={imagemSaida} alt='Resultado'/>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default App
