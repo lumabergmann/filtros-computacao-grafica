@@ -55,18 +55,18 @@ function App() {
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if(!imagemSaida || !imagem){
       return;
     }
 
     const nomeImagem = imagem.name;  // Extrai o nome do arquivo anexado
-    const pontoExtensao = lastIndexOf(".");  // Pega o índice do último ponto do nome do arquivo para extrair a extensão
+    const pontoExtensao = nomeImagem.lastIndexOf(".");  // Pega o índice do último ponto do nome do arquivo para extrair a extensão
 
     const extensao = pontoExtensao !== -1 ? nomeImagem.slice(pontoExtensao) : '.png';   // Extrai a extensão do arquivo. Se não houver extensão, seta para png
     const nomeImagemSemExtensao = pontoExtensao !== -1 ? nomeImagem.slice(0, pontoExtensao) : nomeImagem;  // Extrai apenas o nome do arquivo, sem a extensão
 
-    const nomeDownload = '${nomeImagemSemExtensao}_${filtro}${extensao}';
+    const nomeDownload = `${nomeImagemSemExtensao}_${filtro}${extensao}`;
 
     const link = document.createElement('a');
     link.href = imagemSaida;
@@ -125,6 +125,9 @@ function App() {
           <div>
             <h2>Resultado</h2>
             <img src={imagemSaida} alt='Resultado'/>
+            <div>
+              <button className='btn-download' type='button' onClick={handleDownload}>Fazer download da imagem</button>
+            </div>
           </div>
         )}
       </div>

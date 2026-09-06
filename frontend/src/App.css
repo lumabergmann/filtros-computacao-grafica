@@ -42,9 +42,8 @@ select {
 }
 
 /* Estilização e destaque do botão */
-.btn-primary {
+button {
   width: 100%;
-  background-color: #0066cc;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -52,7 +51,11 @@ select {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;  
+}
+
+.btn-primary {
+  background-color: #0066cc;
 }
 
 .btn-primary:hover {
@@ -62,6 +65,15 @@ select {
 .btn-primary:disabled {
   background-color: #a0a0a0;
   cursor: not-allowed;
+}
+
+.btn-download {
+  background-color: hsl(110, 93%, 34%);
+  margin-top: 10px;
+}
+
+.btn-download:hover {
+  background-color: hsl(110, 93%, 20%);;
 }
 
 /* Visualização das Imagens */
