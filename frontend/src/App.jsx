@@ -55,6 +55,28 @@ function App() {
     }
   };
 
+  const handleDownload = async () => {
+    if(!imagemSaida || !imagem){
+      return;
+    }
+
+    const nomeImagem = imagem.name;  // Extrai o nome do arquivo anexado
+    const pontoExtensao = lastIndexOf(".");  // Pega o índice do último ponto do nome do arquivo para extrair a extensão
+
+    const extensao = pontoExtensao !== -1 ? nomeImagem.slice(pontoExtensao) : '.png';   // Extrai a extensão do arquivo. Se não houver extensão, seta para png
+    const nomeImagemSemExtensao = pontoExtensao !== -1 ? nomeImagem.slice(0, pontoExtensao) : nomeImagem;  // Extrai apenas o nome do arquivo, sem a extensão
+
+    const nomeDownload = '${nomeImagemSemExtensao}_${filtro}${extensao}';
+
+    const link = document.createElement('a');
+    link.href = imagemSaida;
+    link.download = nomeDownload;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   return (
     <div className='root'>
