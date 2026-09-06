@@ -16,6 +16,7 @@
 .imageChoice,
 .filterChoice {
   flex: 1;
+  width: 300px;
 }
 
 label {
