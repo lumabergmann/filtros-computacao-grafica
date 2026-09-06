@@ -1,7 +1,6 @@
-# filtros-computacao-grafica
 # Processador de Filtros de Imagens 🖼️
 
-Este projeto é uma aplicação web completa (Full Stack) desenvolvida para aplicação de filtros digitais e processamento de imagens. A arquitetura conta com um backend em **Python (FastAPI)** responsável pelas rotas e processamento matemático das matrizes de pixels, e um frontend dinâmico construído com **React (Vite)**.
+Este projeto é uma aplicação web desenvolvida para aplicação de filtros digitais e processamento de imagens. A arquitetura conta com um backend em **Python (FastAPI)** responsável pelas rotas e processamento matemático das matrizes de pixels, e um frontend dinâmico construído com **React (Vite)**.
 
 ---
 
@@ -9,7 +8,7 @@ Este projeto é uma aplicação web completa (Full Stack) desenvolvida para apli
 
 * **Backend:**
 * Python 3
-* FastAPI (API RESTful)
+* FastAPI
 * Pillow / PIL (Manipulação de imagens)
 * NumPy (Operações com matrizes)
 * Uvicorn (Servidor ASGI)
@@ -28,7 +27,7 @@ Este projeto é uma aplicação web completa (Full Stack) desenvolvida para apli
 ## 📁 Estrutura de Pastas
 
 ```text
-projeto-filtros/
+filtros-computacao-grafica/
 │
 ├── backend/
 │   ├── filtros.py            # Funções de processamento de imagem e aplicação de kernels
@@ -132,3 +131,12 @@ O frontend estará acessível no endereço indicado no terminal (geralmente `htt
 * **Contraste & Histograma:** Equalização de histograma.
 * **Filtros Espaciais (Convolução):** Blur (Média), Motion Blur, Detecção de Bordas, Emboss, Sobel e Prewitt.
 * **Filtros Não-Lineares & Morfológicos:** Mediana, Dilatação, Erosão, Abertura e Fechamento.
+
+---
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+Copyright © 2026 - Luma da Silva Bergmann
