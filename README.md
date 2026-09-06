@@ -24,7 +24,7 @@ Este projeto é uma aplicação web desenvolvida para aplicação de filtros dig
 
 ---
 
-## 📁 Estrutura de Pastas
+## 📁 Estrutura de Diretórios
 
 ```text
 filtros-computacao-grafica/
