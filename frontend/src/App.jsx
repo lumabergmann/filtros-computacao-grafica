@@ -1,6 +1,50 @@
 import { useState } from 'react'
 import './App.css'
 
+const TEXTO_FILTROS = {
+  cinza: 
+    "Converte uma imagem colorida em tons de cinza, removendo a informação de cor e mantendo apenas a luminosidade. O cálculo é feito aplicando uma média ponderada entre os canais vermelho, verde e azul para refletir a sensibilidade da visão humana.",
+
+  equalizar: 
+    "Aumenta o contraste global da imagem redistribuindo os níveis de cinza ao longo do histograma. Esse processo destaca detalhes em áreas muito escuras ou muito claras ao balancear as intensidades de forma mais uniforme.",
+
+  binarizar: 
+    "Transforma a imagem em apenas duas cores puras: preto e branco. O processamento é feito convertendo a imagem para tons de cinza e comparando a intensidade de cada pixel com um limite calculado automaticamente pelo método de Otsu.",
+
+  blur: 
+    "Suaviza a imagem e reduz ruídos gerando um efeito de desfoque uniforme. O valor de cada pixel é substituído pela média aritmética dos valores de seus pixels vizinhos.",
+
+  motionBlur: 
+    "Simula o efeito de desfoque de movimento, como o rastro de uma câmera ou objeto se deslocando rapidamente. O cálculo realiza a média dos pixels vizinhos apenas ao longo de uma linha direcionada.",
+
+  mediana: 
+    "Remove ruídos isolados (como o efeito 'sal e pimenta') sem borrar as bordas principais. Ele analisa a vizinhança de cada pixel, ordena os valores e substitui o pixel central pela mediana exata dessa lista.",
+
+  bordas: 
+    "Aumenta a nitidez visual e acentua os contornos da imagem. Isola os detalhes de alta frequência subtraindo uma versão suavizada da imagem original e, em seguida, soma esses detalhes de volta à imagem.",
+
+  emboss: 
+    "Cria um efeito tridimensional na imagem, fazendo com que ela pareça esculpida em alto-relevo. O cálculo destaca transições na diagonal e adiciona uma tonalidade cinza de fundo.",
+
+  sobel: 
+    "Identifica e destaca os contornos e bordas da imagem calculando as variações abruptas de intensidade nas direções horizontal e vertical de forma combinada.",
+
+  prewitt: 
+    "Detecta bordas da imagem de forma semelhante ao filtro Sobel, medindo as mudanças de intensidade. Utiliza pesos uniformes nos pixels vizinhos para mapear as variações verticais e horizontais.",
+
+  erosao: 
+    "Desgasta ou encolhe as regiões claras da imagem. Esse filtro morfológico é ideal para eliminar pequenos ruídos brancos isolados e afinar estruturas e objetos claros.",
+
+  dilatacao: 
+    "Expande ou engrossa as regiões claras da imagem. Esse filtro morfológico ajuda a preencher pequenos buracos e a conectar regiões claras que estão muito próximas.",
+
+  abertura: 
+    "Remove pequenos objetos e ruídos claros da imagem sem alterar significativamente o tamanho e a forma dos objetos maiores. Funciona aplicando uma erosão seguida por uma dilatação.",
+
+  fechamento: 
+    "Preenche pequenos buracos, fendas e lacunas escuras dentro de áreas claras. Funciona aplicando uma dilatação seguida por uma erosão."
+};
+
 function App() {
   const [imagem, setImagem] = useState(null);
   const [previewEntrada, setPreviewEntrada] = useState(null);
@@ -77,7 +121,6 @@ function App() {
     document.body.removeChild(link);
   };
 
-
   return (
     <div className='root'>
       <h1>Filtros de Imagem</h1>
@@ -109,6 +152,7 @@ function App() {
             </select>
           </div>
         </div>
+        <div className='texto-filtro'>{TEXTO_FILTROS[filtro]}</div>
         <div className='form-actions'>
           <button className='btn-primary' type='submit' disabled={carregando}>{carregando ? 'Processando...' : 'Aplicar Filtro'}</button>
         </div>

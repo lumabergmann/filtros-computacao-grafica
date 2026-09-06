@@ -35,6 +35,16 @@ select {
   box-sizing: border-box;
 }
 
+/* Textos explicativos */
+.texto-filtro {
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  padding: 10px;
+  text-align: justify;
+  background-color: rgba(38, 108, 212, 0.288);
+}
+
 /* Área do botão abaixo das escolhas */
 .form-actions {
   display: flex;
