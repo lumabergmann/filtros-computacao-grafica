@@ -87,7 +87,7 @@ pip install -r requirements.txt
 
 5. Inicie o servidor da API:
 ```bash
-uvicorn main:app --reload
+fastapi dev main.py
 
 ```
 
