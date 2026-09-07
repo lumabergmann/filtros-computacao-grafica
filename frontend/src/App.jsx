@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 
-const API = "https://filtros-computacao-grafica.vercel.app" || "http://127.0.0.1:8000/processar";
+const API = "https://filtros-computacao-grafica.vercel.app/processar" || "http://127.0.0.1:8000/processar";
 
 const TEXTO_FILTROS = {
   cinza: 
