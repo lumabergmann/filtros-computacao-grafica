@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 
+const API = "https://filtros-computacao-grafica.vercel.app" || "http://127.0.0.1:8000/processar";
+
 const TEXTO_FILTROS = {
   cinza: 
     "Converte uma imagem colorida em tons de cinza, removendo a informação de cor e mantendo apenas a luminosidade. O cálculo é feito aplicando uma média ponderada entre os canais vermelho, verde e azul para refletir a sensibilidade da visão humana.",
@@ -77,7 +79,7 @@ function App() {
     formData.append("filtro", filtro);
 
     try{
-      const response = await fetch("http://127.0.0.1:8000/processar", {
+      const response = await fetch(API, {
         method: "POST",
         body: formData,
       });
