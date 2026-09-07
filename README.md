@@ -134,6 +134,12 @@ O frontend estará acessível no endereço indicado no terminal (geralmente `htt
 
 ---
 
+## 📁 Extensões Aceitas no Upload de Imagem
+
+Apenas imagens com extensão **.jpg**, **.png** e **.webp** são aceitas.
+
+---
+
 ## 📝 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
