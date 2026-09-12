@@ -158,7 +158,7 @@ function App() {
             </select>
             {FILTROS_COM_INTENSIDADE.includes(filtro) && (
               <div className='intensityChoice'>
-                <label>Intensidade do Filtro (Kernel: {intensidade} x {intensidade})</label>
+                <label>Intensidade do Filtro</label>
                 <input type='range' 
                        min="3" max="15" step="2" 
                        value={intensidade}
