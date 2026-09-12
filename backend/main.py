@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 @app.post("/processar")
-async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...)):  # O envio da imagem e do nome do filtro é obrigatório (os parâmetros recebidos não podem ser nulos)
+async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...), intensidade_filtro: int = Form(3)):  # O envio da imagem e do nome do filtro é obrigatório (os parâmetros recebidos não podem ser nulos)
     extensoes_permitidas = {".jpg", ".jpeg", ".png", ".webp"}
     extensao = Path(file.filename).suffix.lower()
 
@@ -33,7 +33,7 @@ async def processar_imagem(file: UploadFile = File(...), filtro: str = Form(...)
         conteudo_bytes = await file.read()
         imagem_original = Image.open(io.BytesIO(conteudo_bytes))  # Salva os arquivos na memória RAM (temporária)
 
-        imagem_processada = processar_filtro(imagem_original, filtro)
+        imagem_processada = processar_filtro(imagem_original, filtro, intensidade_filtro)
         formato_original = imagem_original.format or "PNG"  # Pega o formato original da imagem
 
         # Salvando na memória RAM

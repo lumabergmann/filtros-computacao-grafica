@@ -2,9 +2,12 @@ from PIL import Image
 import numpy as np
 import math
 
-def processar_filtro(img_pil: Image.Image, filtro: str) -> Image.Image:
+def processar_filtro(img_pil: Image.Image, filtro: str, intensidade_filtro: int) -> Image.Image:
     largura, altura = img_pil.size
     pixels = img_pil.load()
+
+    # Certifica que a intensidade do filtro sempre será ímpar
+    k = intensidade_filtro if intensidade_filtro % 2 != 0 else intensidade_filtro + 1
 
     # Transforma a imagem para tons de cinza
     img_cinza = transformar_cinza(largura, altura, pixels)
@@ -31,7 +34,7 @@ def processar_filtro(img_pil: Image.Image, filtro: str) -> Image.Image:
         return img_binarizada
 
     elif filtro == "blur":
-        kernel_media = [[1/81]*9 for _ in range(9)]
+        kernel_media = [[1/(k**2)]*k for _ in range(k)]
         return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_media, altura, largura))
 
     elif filtro == "bordas":
@@ -43,7 +46,7 @@ def processar_filtro(img_pil: Image.Image, filtro: str) -> Image.Image:
         return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_emboss, altura, largura))
 
     elif filtro == "motionBlur":
-        kernel_motion_blur = create_kernel_motion_blur(9)
+        kernel_motion_blur = create_kernel_motion_blur(k)
         return matriz_para_array(aplicar_kernel(matriz_pixels, kernel_motion_blur, altura, largura))
 
     elif filtro == "sobel":
@@ -65,19 +68,19 @@ def processar_filtro(img_pil: Image.Image, filtro: str) -> Image.Image:
         return matriz_para_array(combina_magnitude(gx_prewitt, gy_prewitt, altura, largura))
 
     elif filtro == "mediana":
-        return matriz_para_array(filtro_mediana(matriz_pixels, 3, altura, largura))
+        return matriz_para_array(filtro_mediana(matriz_pixels, k, altura, largura))
 
     elif filtro == "dilatacao":
-        return matriz_para_array(filtro_dilatacao(matriz_binarizada, 3, altura, largura))
+        return matriz_para_array(filtro_dilatacao(matriz_binarizada, k, altura, largura))
 
     elif filtro == "erosao":
-        return matriz_para_array(filtro_erosao(matriz_binarizada, 3, altura, largura))
+        return matriz_para_array(filtro_erosao(matriz_binarizada, k, altura, largura))
 
     elif filtro == "abertura":
-        return matriz_para_array(filtro_abertura(matriz_binarizada, 3, altura, largura))
+        return matriz_para_array(filtro_abertura(matriz_binarizada, k, altura, largura))
 
     elif filtro == "fechamento":
-        return matriz_para_array(filtro_fechamento(matriz_binarizada, 3, altura, largura))
+        return matriz_para_array(filtro_fechamento(matriz_binarizada, k, altura, largura))
 
     else:
         raise ValueError ("Filtro não reconhecido")
