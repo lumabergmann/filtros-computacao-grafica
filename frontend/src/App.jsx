@@ -47,10 +47,13 @@ const TEXTO_FILTROS = {
     "Preenche pequenos buracos, fendas e lacunas escuras dentro de áreas claras. Funciona aplicando uma dilatação seguida por uma erosão."
 };
 
+const FILTROS_COM_INTENSIDADE = ["blur", "mediana", "motionBlur", "dilatacao", "erosao", "abertura", "fechamento"];
+
 function App() {
   const [imagem, setImagem] = useState(null);
   const [previewEntrada, setPreviewEntrada] = useState(null);
   const [filtro, setFiltro] = useState("cinza");
+  const [intensidade, setIntensidade] = useState(3);
   const [imagemSaida, setImagemSaida] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
@@ -77,6 +80,7 @@ function App() {
     const formData = new FormData();  // Classe usada para simular o envio de formulários HTML fo formato multipart/form-data. É a única forma correta de enviar arquivos com texto via requisições HTTP
     formData.append("file", imagem);
     formData.append("filtro", filtro);
+    formData.append("intensidade_filtro", intensidade)
 
     try{
       const response = await fetch(API, {
@@ -152,6 +156,15 @@ function App() {
               <option value="abertura">Abertura</option>
               <option value="fechamento">Fechamento</option>
             </select>
+            {FILTROS_COM_INTENSIDADE.includes(filtro) && (
+              <div className='intensityChoice'>
+                <label>Intensidade do Filtro (Kernel: {intensidade} x {intensidade})</label>
+                <input type='range' 
+                       min="3" max="15" step="2" 
+                       value={intensidade}
+                       onChange={(e) => setIntensidade(Number(e.target.value))}/>
+              </div>
+            )}
           </div>
         </div>
         <div className='texto-filtro'>{TEXTO_FILTROS[filtro]}</div>

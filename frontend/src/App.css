@@ -19,6 +19,19 @@
   width: 300px;
 }
 
+.intensityChoice {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.intensityChoice input[type="range"] {
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(38, 108, 212, 0.288);
+  border-radius: 5px;
+}
+
 label {
   margin-bottom: 8px;
   display: block;
