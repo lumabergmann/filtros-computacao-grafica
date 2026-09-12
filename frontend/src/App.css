@@ -32,6 +32,10 @@
   border-radius: 5px;
 }
 
+.intensityChoice input[type="range"]:hover {
+  background: rgba(8, 22, 175, 0.288);
+}
+
 label {
   margin-bottom: 8px;
   display: block;
