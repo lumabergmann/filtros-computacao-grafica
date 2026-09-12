@@ -140,6 +140,30 @@ Apenas imagens com extensão **.jpg**, **.png** e **.webp** são aceitas.
 
 ---
 
+## ⚠️ Recomendações de Uso e Desempenho
+
+* **Tamanho do Arquivo:** Recomenda-se enviar imagens de até **4 MB** para evitar espera excessiva.
+* **Impacto da Intensidade:** Filtros com tamanho de matriz alto (alta intensidade) em imagens acima de Full HD podem atingir o *timeout* da requisição no servidor.
+
+--- 
+
+## 🖼️ Tratamento de Bordas em Filtros Espaciais e Morfológicos
+
+Ao aplicar filtros baseados em **convolução de matrizes** ou **operações morfológicas**, é possível notar que uma moldura preta é gerada em volta da imagem de saída.
+
+### Por que isso acontece?
+
+Esses filtros calculam o novo valor de um pixel com base na sua **vizinhança** (uma matriz de tamanho $K \times K$, onde $K$ é a intensidade do filtro escolhida pelo usuário):
+
+1. **Pixel Central e Vizinhança completa:** Para um pixel localizado no meio da imagem, o algoritmo consegue ler sem problemas os pixels vizinhos acima, abaixo, à esquerda e à direita.
+2. **Pixels das Extremidades (Bordas):** Quando o algoritmo tenta calcular a vizinhança para um pixel localizado nas bordas extremas da imagem, a matriz sobressai para fora dos limites da imagem (índices negativos ou maiores que a largura/altura).
+
+Para evitar erros de índice (*Out of Bounds*) durante o cálculo matricial, os laços de repetição iniciam a partir da margem limite. 
+
+Como a matriz de saída é inicializada com zeros (`0.0`), os pixels pertencentes a essa margem perimétrica mantêm o valor `0` (correspondente ao tom de **preto** absoluto na imagem final). Quanto maior for o tamanho da intensidade ($K$) selecionada no slider, maior será a espessura da borda preta preservada ao redor do resultado.
+
+---
+
 ## 📝 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
